@@ -2,8 +2,7 @@
   <span>Results</span>
 </div>
 {{#each results}}
-  <div>
+  <div class="result" onclick="addToQueue({{json this}})">
     <span>{{title}}</span>
-    <button onclick="addToQueue({{json this}})">Add!</button>
   </div>
 {{/each}}

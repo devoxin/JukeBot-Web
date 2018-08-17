@@ -51,6 +51,12 @@ function checkEnter (event) {
 }
 
 function addToQueue (track) {
+  const resultList = document.getElementById('results-list');
+
+  while (resultList.firstChild) {
+    resultList.removeChild(resultList.firstChild);
+  }
+
   const guildId = window.location.pathname.split('/')[2];
 
   request(

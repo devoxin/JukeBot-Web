@@ -48,11 +48,22 @@ body {
   padding: 5px;
 }
 
-.results div:nth-child(odd) {
+.result {
+  overflow: none;
+  cursor: pointer;
+  padding-left: 5px;
+  transition: padding-left 0.5s;
+}
+
+.result:hover {
+  padding-left: 20px;
+}
+
+.result:nth-child(odd) {
   background-color: rgb(230, 230, 230);
 }
 
-.results div:nth-child(even) {
+.result:nth-child(even) {
   background-color: rgb(240, 240, 240);
 }
 
