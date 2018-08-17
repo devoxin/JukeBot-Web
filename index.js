@@ -68,6 +68,11 @@ client.on('messageCreate', async (msg) => {
     const player = getPlayer(msg.channel.guild.id);
     player.setAnnounce(msg.channel.id);
   }
+
+  if ('skip' === command) {
+    const player = getPlayer(msg.channel.guild.id);
+    player.stop();
+  }
 });
 
 function getPlayer (guildId) {
