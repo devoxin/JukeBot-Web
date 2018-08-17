@@ -12,16 +12,10 @@
     <button onclick="search()">Search</button>
   </div>
   <div class="results" id="results-list"></div>
-  <table class="queue-list" cellpadding="3">
-    <tr>
-      <td>Song</td>
-      <td>ID</td>
-    </tr>
+  <div class="track-list">
+    <span>Track List</span>
     {{#each queue}}
-      <tr>
-        <td>{{title}}</td>
-        <td>{{id}}</td>
-      </tr>
+      <span>{{title}}</span>
     {{/each}}
-  </table>
+  </div>
 </body>

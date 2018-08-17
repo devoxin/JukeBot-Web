@@ -75,7 +75,7 @@ function getPlayer (guildId) {
     players.set(guildId, new audioPlayer(client, guildId));
   }
 
-  return players.get(guildId)
+  return players.get(guildId);
 }
 
 webServer.listen(config.webPort);

@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core');
 
 
 class AudioPlayer {
-  constructor(client, guildId) {
+  constructor (client, guildId) {
     this._client = client;
     this._guildId = guildId;
     this.queue = [];
@@ -18,47 +18,47 @@ class AudioPlayer {
    * 1 - single
    * 2 - all
    */
-  setRepeat(mode) {
+  setRepeat (mode) {
     const val = Number(mode) || 0;
     this.repeat = Math.max(Math.min(val, 2), 0);;
   }
 
-  getRepeatReadable() {
-    if (this.repeat === 2) {
+  getRepeatReadable () {
+    if (2 === this.repeat) {
       return 'all';
-    } else if (this.repeat === 1) {
+    } else if (1 === this.repeat) {
       return 'single';
-    } else if (this.repeat === 0) {
+    } else if (0 === this.repeat) {
       return 'none';
     } else {
       return 'unknown';
     }
   }
 
-  voteSkip(userId) {
+  voteSkip (userId) {
     this.skips.add(userId);
     return this.skips.size;
   }
 
-  setAnnounce(channelId) {
+  setAnnounce (channelId) {
     this.msgChannel = channelId;
   }
 
-  async add(track) {
+  async add (track) {
     this.queue.push(track);
     await this._announce('Track Enqueued', track.title);
 
-    if (this.queue.length === 1 && !this.isPlaying()) {
+    if (1 === this.queue.length && !this.isPlaying()) {
       this.play();
     }
   }
 
-  async play() {
+  async play () {
     if (!this.isConnected()) {
       return;
     }
 
-    if (this.queue.length === 0) {
+    if (0 === this.queue.length) {
       this._announce('Queue Concluded', 'Queue more songs to keep the party going!');
       this.repeat = 0;
       this.current = null;
@@ -89,9 +89,9 @@ class AudioPlayer {
     voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
 
     voiceConnection.once('end', () => {
-      if (this.repeat === 2) {
+      if (2 === this.repeat) {
         this.queue.push(this.current);
-      } else if (this.repeat === 1) {
+      } else if (1 === this.repeat) {
         this.queue.unshift(this.current);
       }
 
@@ -100,7 +100,7 @@ class AudioPlayer {
     });
   }
 
-  stop() {
+  stop () {
     const voiceConnection = this._client.voiceConnections.get(this._guildId);
 
     if (!voiceConnection) {
@@ -110,7 +110,7 @@ class AudioPlayer {
     voiceConnection.stopPlaying();
   }
 
-  destroy() {
+  destroy () {
     this.queue.clear();
     this.skips.clear();
 
@@ -122,15 +122,15 @@ class AudioPlayer {
     this._client.audioPlayers.delete(this._guildId);
   }
 
-  isConnected() {
-    return this._client.voiceConnections.has(this._guildId) && this._client.voiceConnections.get(this._guildId).channelID !== null
+  isConnected () {
+    return this._client.voiceConnections.has(this._guildId) && null !== this._client.voiceConnections.get(this._guildId).channelID;
   }
 
-  isPlaying() {
-    return this.isConnected() && this.current !== null;
+  isPlaying () {
+    return this.isConnected() && null !== this.current;
   }
 
-  async _announce(title, description) {
+  async _announce (title, description) {
     if (!this.msgChannel) {
       return;
     }
@@ -154,13 +154,13 @@ async function getFormats (id) {
   const info = await ytdl.getInfo(id).catch(() => null);
 
   if (!info || !info.formats) {
-      return null;
+    return null;
   }
 
   const formats = info.formats.filter(fmt => ['251', '250', '249'].includes(fmt.itag)); // opus-only
   formats.sort((a, b) => b.itag - a.itag);
 
-  return formats.length > 0 ? formats[0].url : null;
+  return 0 < formats.length ? formats[0].url : null;
 }
 
 async function getDuration (id) {

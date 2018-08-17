@@ -1,4 +1,4 @@
-function request(method, route, headers = {}, body) {
+function request (method, route, headers = {}, body) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest();
     req.open(method, route, true);
@@ -9,7 +9,7 @@ function request(method, route, headers = {}, body) {
 
     req.onload = () => {
       if (req.readyState === XMLHttpRequest.DONE) {
-        if (req.status >= 200 && req.status < 400) {
+        if (200 <= req.status && 400 > req.status) {
           if (/application\/json/.test(req.getResponseHeader('Content-Type'))) {
             resolve(JSON.parse(req.responseText));
           } else {
@@ -19,11 +19,11 @@ function request(method, route, headers = {}, body) {
           reject(req.responseText);
         }
       }
-    }
+    };
 
     req.onerror = reject;
 
-    if (typeof body === 'object') {
+    if ('object' === typeof body) {
       body = JSON.stringify(body);
     }
 
@@ -31,7 +31,7 @@ function request(method, route, headers = {}, body) {
   });
 }
 
-async function search() {
+async function search () {
   const resultList = document.getElementById('results-list');
 
   while (resultList.firstChild) {
@@ -44,13 +44,13 @@ async function search() {
   resultList.innerHTML = results;
 }
 
-function checkEnter(event) {
-  if (event.keyCode === 13) {
+function checkEnter (event) {
+  if (13 === event.keyCode) {
     search();
   }
 }
 
-function addToQueue(track) {
+function addToQueue (track) {
   const guildId = window.location.pathname.split('/')[2];
 
   request(
