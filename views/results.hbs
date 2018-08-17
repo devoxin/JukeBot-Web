@@ -1,0 +1,9 @@
+<div class="result-header">
+  <span>Results</span>
+</div>
+{{#each results}}
+  <div>
+    <span>{{title}}</span>
+    <button onclick="addToQueue({{json this}})">Add!</button>
+  </div>
+{{/each}}

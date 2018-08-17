@@ -1,0 +1,27 @@
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <script src="/main.js"></script>
+</head>
+<body>
+  <div class="title-block">
+    <span>{{name}}</span>
+  </div>
+  <div class="search-block">
+    <input onkeypress="checkEnter(event)" id="search-identifier" type="text" placeholder="Search for a song...">
+    <button onclick="search()">Search</button>
+  </div>
+  <div class="results" id="results-list"></div>
+  <table class="queue-list" cellpadding="3">
+    <tr>
+      <td>Song</td>
+      <td>ID</td>
+    </tr>
+    {{#each queue}}
+      <tr>
+        <td>{{title}}</td>
+        <td>{{id}}</td>
+      </tr>
+    {{/each}}
+  </table>
+</body>
