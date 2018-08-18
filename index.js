@@ -1,13 +1,14 @@
 const config      = require('./config');
 const audioPlayer = require('./audioPlayer');
 const { Client }  = require('eris');
-const search      = require('tubesearch');
 const express     = require('express');
 const handlebars  = require('express-handlebars');
 const bodyParser  = require('body-parser');
+const threadPool  = require('worker-threads-pool');
 
 const client    = new Client(config.token);
 const players   = new Map();
+const pool      = new threadPool({ max: 5 });
 const webServer = express();
 
 webServer.engine('.hbs', handlebars({
@@ -42,9 +43,9 @@ webServer.get('/search', (req, res) => {
     return res.status(400).json({ error: 'No identifier provided.' });
   }
 
-  search(req.query.identifier, 5)
+  searchFor(req.query.identifier)
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err });
     })
     .then((results) => {
       res.render('results', { results });
@@ -90,6 +91,26 @@ function getPlayer (guildId) {
   }
 
   return players.get(guildId);
+}
+
+function searchFor (identifier) {
+  return new Promise((resolve, reject) => {
+    pool.acquire('./searchHook.js', {
+      workerData: identifier
+    }, (worker, err) => {
+      if (err) {
+        return reject(err.message);
+      }
+
+      worker.once('message', (results) => {
+        if (Array.isArray(results)) {
+          resolve(results);
+        } else {
+          reject(results);
+        }
+      });
+    });
+  });
 }
 
 webServer.listen(config.webPort);

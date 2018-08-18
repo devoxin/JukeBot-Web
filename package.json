@@ -16,6 +16,7 @@
     "express-handlebars": "^3.0.0",
     "node-opus": "^0.3.0",
     "tubesearch": "^1.0.5",
+    "worker-threads-pool": "^1.0.0",
     "ws": "^6.0.0",
     "ytdl-core": "^0.24.0"
   }
