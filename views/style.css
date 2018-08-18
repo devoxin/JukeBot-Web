@@ -124,27 +124,12 @@ body {
   font-size: 30px;
 }
 
-a {
+a, a:visited, a:link, a:active {
   text-decoration: none;
   color: inherit;
-}
-
-a:visited {
-  text-decoration: none;
-  color: inherit;
-}
-
-a:link {
-  text-decoration: none;
-  color: inherit;
-}
-
-a:active {
-  text-decoration: none;
-  color: inherit;
+  transition: color 0.5s;
 }
 
 a:hover {
-  text-decoration: underline;
   color: #1E90FF;
 }
