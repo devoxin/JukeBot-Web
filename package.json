@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --experimental-worker ./index.js"
+  },
+  "engines": {
+    "node": ">=10.5.0"
   },
   "keywords": [],
   "author": "kromatic",
