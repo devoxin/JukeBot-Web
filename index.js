@@ -78,6 +78,10 @@ client.on('messageCreate', async (msg) => {
     const player = getPlayer(msg.channel.guild.id);
     player.stop();
   }
+
+  if ('web' === command) {
+    msg.channel.createMessage(`http://127.0.0.1:420/guild/${msg.channel.guild.id}\nhttp://192.168.1.150:420/guild/${msg.channel.guild.id}`);
+  }
 });
 
 function getPlayer (guildId) {

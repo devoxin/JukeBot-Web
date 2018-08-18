@@ -5,18 +5,25 @@
   <script src="/main.js"></script>
 </head>
 <body>
-  <div class="title-block">
-    <span>{{name}}</span>
+  <div class="container">
+    <div class="title-block">
+      <span>{{name}}</span>
+    </div>
+    <div class="search-block">
+      <input onkeypress="checkEnter(event)" id="search-identifier" type="text" placeholder="Search for a song...">
+      <button onclick="search()">Search</button>
+    </div>
+    <div class="results" id="results-list"></div>
+    <div class="track-list">
+      <span>Track List ({{queue.length}} tracks)</span>
+      {{#each queue}}
+        <span>{{title}}</span>
+      {{/each}}
+    </div>
   </div>
-  <div class="search-block">
-    <input onkeypress="checkEnter(event)" id="search-identifier" type="text" placeholder="Search for a song...">
-    <button onclick="search()">Search</button>
-  </div>
-  <div class="results" id="results-list"></div>
-  <div class="track-list">
-    <span>Track List ({{queue.length}} tracks)</span>
-    {{#each queue}}
-      <span>{{title}}</span>
-    {{/each}}
+  <div class="current-track">
+    <img src="https://i.ytimg.com/vi/KwHJxfj9CsQ/hqdefault.jpg">
+    <span id="title">It's everyday bro - Jake Paul</span>
+    <span id="duration">03:29</span>
   </div>
 </body>
