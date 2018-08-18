@@ -37,13 +37,18 @@ webServer.get('/guild/:id', (req, res) => {
   });
 });
 
-webServer.get('/search', async (req, res) => {
+webServer.get('/search', (req, res) => {
   if (!req.query.identifier) {
     return res.status(400).json({ error: 'No identifier provided.' });
   }
 
-  const results = await search(req.query.identifier, 5);
-  res.render('results', { results });
+  search(req.query.identifier, 5)
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    })
+    .then((results) => {
+      res.render('results', { results });
+    });
 });
 
 webServer.put('/guild/:id/queue', (req, res) => {
