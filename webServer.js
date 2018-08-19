@@ -59,11 +59,12 @@ class WebServer {
       res.render('guild', {
         name: this.client.guilds.get(guildId).name,
         queue: player.queue,
+        playing: !!player.current,
         current,
         channel: {
           connected: !!channel,
           name: channel ? channel.name : null,
-          colour: !!channel ? '#35d563' : '#be2f2f'
+          colour: channel ? '#35d563' : '#be2f2f'
         }
       });
     });

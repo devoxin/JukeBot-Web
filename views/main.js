@@ -1,4 +1,52 @@
+let guildId;
+let ws;
 let interval;
+
+function load (playing, currentMs, totalMs) {
+  guildId = window.location.pathname.split('/')[2];
+
+  if (playing) {
+    handleProgressUpdate(currentMs, totalMs);
+  }
+
+  ws = new WebSocket(`ws://${location.host.split(':')[0]}:8080`);
+  ws.onopen = () => {
+    console.log('WS opened! Sending...');
+    ws.send(`guild:${guildId}`);
+  };
+  ws.onmessage = processWsMessage;
+}
+
+function processWsMessage (msg) {
+  console.log('Received WebSocket message', msg);
+  const data = JSON.parse(msg.data);
+
+  if ('TRACK_CHANGE' === data.event) {
+    handleProgressUpdate(0, data.d.durationMs);
+
+    document.querySelector('.current-track img').src = `https://i.ytimg.com/vi/${data.d.id}/default.jpg`;
+
+    const title = document.querySelector('.current-track #title a');
+    title.href = `https://youtube.com/watch?v=${data.d.id}`;
+    title.innerText = data.d.title;
+
+    document.querySelector('.current-track #duration').innerText = data.d.duration;
+  } else if ('QUEUE_REMOVE' === data.event) {
+    const tracks = document.querySelector('.track-list');
+    if (tracks.children[1]) {
+      tracks.children[1].remove();
+    }
+
+    tracks.firstElementChild.innerText = `Track List (${tracks.children.length - 1} tracks)`;
+  } else if ('QUEUE_ADD' === data.event) {
+    const tracks = document.querySelector('.track-list');
+    const span = document.createElement('span');
+    span.innerText = data.d.title;
+
+    tracks.appendChild(span);
+    tracks.firstElementChild.innerText = `Track List (${tracks.children.length - 1} tracks)`;
+  }
+}
 
 function handleProgressUpdate (currentMs, totalMs) {
   const start = Date.now();
@@ -41,8 +89,6 @@ function addToQueue (track) {
   while (resultList.firstChild) {
     resultList.removeChild(resultList.firstChild);
   }
-
-  const guildId = window.location.pathname.split('/')[2];
 
   request(
     'PUT',

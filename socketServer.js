@@ -25,18 +25,19 @@ class SocketServer {
     }
   }
 
-  dispatchPayload (guildId, payload) {
-    if ('object' === typeof payload) {
-      payload = JSON.stringify(payload);
-    }
+  dispatchPayload (guildId, event, data) {
+    const payload = JSON.stringify({
+      event,
+      d: data
+    });
 
-    this.server.clients.forEach(ws => {
+    for (const ws of this.server.clients.values()) {
       if (ws.readyState !== WebSocket.OPEN || ws.guildId !== guildId) {
-        return;
+        continue;
       }
 
       ws.send(payload);
-    });
+    }
   }
 }
 

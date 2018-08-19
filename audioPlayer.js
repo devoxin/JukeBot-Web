@@ -46,10 +46,11 @@ class AudioPlayer {
 
   async add (track) {
     this.queue.push(track);
-    await this._announce('Track Enqueued', track.title);
 
     if (1 === this.queue.length && !this.isPlaying()) {
       this.play();
+    } else {
+      this._client.ws.dispatchPayload(this._guildId, 'QUEUE_ADD', track);
     }
   }
 
@@ -65,6 +66,7 @@ class AudioPlayer {
     }
 
     this.current = this.queue.shift();
+    this._client.ws.dispatchPayload(this._guildId, 'QUEUE_REMOVE', null);
 
     const voiceConnection = this._client.voiceConnections.get(this._guildId);
     const playbackURL = await getFormats(this.current.id);
@@ -77,7 +79,8 @@ class AudioPlayer {
     this._announce('Now Playing', this.current.title);
 
     //voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
-    voiceConnection.play(playbackURL, { format: 'webm' });
+    await voiceConnection.play(playbackURL, { format: 'webm' });
+    this._client.ws.dispatchPayload(this._guildId, 'TRACK_CHANGE', this.current);
 
     voiceConnection.once('end', () => {
       if (2 === this.repeat) {
