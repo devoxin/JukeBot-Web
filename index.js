@@ -68,6 +68,10 @@ webServer.put('/guild/:id/queue', (req, res) => {
   res.status(204).send();
 });
 
+client.once('ready', () => {
+  console.log('gucci gang');
+});
+
 client.on('messageCreate', async (msg) => {
   if (msg.author.bot || !msg.channel.guild || !msg.content.startsWith(config.prefix)) {
     return;
