@@ -109,7 +109,7 @@ body {
 .track-list span:first-child {
   background-color: rgb(80, 80, 80);
   color: white;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .track-list span:nth-child(even) {

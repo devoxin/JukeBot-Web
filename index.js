@@ -1,12 +1,7 @@
-const { Client }  = require('eris');
-const Storage     = require('./storage');
-const config      = require('./config');
-const audioPlayer = require('./audioPlayer');
-const webServer   = require('./webServer');
+const Client = require('./Client');
+const config = require('./config');
 
-const client  = new Client(config.token);
-const players = new Storage();
-const web     = new webServer(client, players);
+const client = new Client();
 
 client.once('ready', () => {
   console.log('gucci gang');
@@ -18,7 +13,7 @@ client.on('messageCreate', async (msg) => {
   }
 
   const [command, ...args] = msg.content.slice(config.prefix.length).split(' ');
-  const player = players.getOrCreate(msg.channel.guild.id, (key) => new audioPlayer(client, key));
+  const player = client.getPlayer(msg.channel.guild.id);
 
   if ('join' === command) {
     await client.joinVoiceChannel(msg.member.voiceState.channelID);
@@ -30,4 +25,4 @@ client.on('messageCreate', async (msg) => {
   }
 });
 
-client.connect();
+client.start();

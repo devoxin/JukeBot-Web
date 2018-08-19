@@ -1,5 +1,6 @@
 {
   "token": "",
   "prefix": "!",
-  "webPort": 420
+  "webPort": 420,
+  "wsPort": 8080
 }

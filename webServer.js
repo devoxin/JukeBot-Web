@@ -5,10 +5,8 @@ const bodyParser = require('body-parser');
 const { Worker } = require('worker_threads');
 
 class WebServer {
-  constructor (client, players) {
+  constructor (client) {
     this.client = client;
-    this.players = players;
-
     this.start();
   }
 
@@ -50,7 +48,7 @@ class WebServer {
         return res.status(404).send('No guilds found matching that ID.');
       }
 
-      const player = this.players.getOrCreate(guildId, (key) => new audioPlayer(client, key));
+      const player = this.client.getPlayer(guildId);
       const voiceConnection = this.client.voiceConnections.get(guildId);
       const channel = voiceConnection && this.client.getChannel(voiceConnection.channelID);
       const isPlaying = voiceConnection && voiceConnection.playing;
@@ -63,9 +61,9 @@ class WebServer {
         queue: player.queue,
         current,
         channel: {
-          connected: isConnected,
+          connected: !!channel,
           name: channel ? channel.name : null,
-          colour: isConnected ? '#35d563' : '#be2f2f'
+          colour: !!channel ? '#35d563' : '#be2f2f'
         }
       });
     });
@@ -75,7 +73,7 @@ class WebServer {
         return res.status(400).json({ error: 'No identifier provided.' });
       }
 
-      searchFor(req.query.identifier)
+      this.searchFor(req.query.identifier)
         .catch((err) => {
           res.status(500).json({ error: err });
         })
@@ -87,7 +85,7 @@ class WebServer {
     server.put('/guild/:id/queue', (req, res) => {
       const track = req.body;
 
-      const player = this.players.getOrCreate(req.params.id, (key) => new audioPlayer(client, key));
+      const player = this.client.getPlayer(req.params.id);
       player.add(track);
 
       res.status(204).send();
