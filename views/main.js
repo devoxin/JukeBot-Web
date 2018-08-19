@@ -1,7 +1,11 @@
+let interval;
+
 function handleProgressUpdate (currentMs, totalMs) {
-  const interval = setInterval(() => {
-    currentMs += 100;
-    const pc = currentMs / totalMs * 100;
+  const start = Date.now();
+
+  interval = setInterval(() => {
+    const diff = Date.now() - start;
+    const pc = (currentMs + diff) / totalMs * 100;
 
     if (100 <= pc) {
       clearInterval(interval);
