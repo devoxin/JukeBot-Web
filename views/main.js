@@ -2,6 +2,7 @@ let interval;
 
 function handleProgressUpdate (currentMs, totalMs) {
   const start = Date.now();
+  clearInterval(interval);
 
   interval = setInterval(() => {
     const diff = Date.now() - start;
