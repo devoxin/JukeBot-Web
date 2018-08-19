@@ -14,7 +14,7 @@ const webServer = express();
 webServer.engine('.hbs', handlebars({
   extname: '.hbs',
   helpers: {
-    'json': (ctx) => JSON.stringify(ctx)
+    json: (ctx) => JSON.stringify(ctx)
   }
 }));
 webServer.set('view engine', '.hbs');
@@ -30,11 +30,18 @@ webServer.get('/guild/:id', (req, res) => {
   }
 
   const player = getPlayer(guildId);
+  const isConnected = client.voiceConnections.has(guildId);
+  const channel = isConnected ? client.getChannel(client.voiceConnections.get(guildId).channelID) : null;
 
   res.render('guild', {
     name: client.guilds.get(guildId).name,
     queue: player.queue,
-    current: player.current
+    current: player.current,
+    channel: {
+      connected: isConnected,
+      name: channel ? channel.name : null,
+      colour: isConnected ? '#35d563' : '#be2f2f'
+    }
   });
 });
 

@@ -23,6 +23,21 @@ body {
   vertical-align: middle;
 }
 
+.vc-block {
+  display: table;
+  width: 80%;
+  height: 30px;
+  margin-left: 10%;
+  margin-top: 15px;
+}
+
+.vc-block span {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 5px;
+  color: white;
+}
+
 .search-block {
   display: flex;
   flex-direction: row;

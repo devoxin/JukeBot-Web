@@ -59,34 +59,25 @@ class AudioPlayer {
     }
 
     if (0 === this.queue.length) {
-      this._announce('Queue Concluded', 'Queue more songs to keep the party going!');
       this.repeat = 0;
       this.current = null;
-
-      if (this._client.voiceConnections.has(this._guildId)) {
-        this._client.leaveVoiceChannel(this._client.voiceConnections.get(this._guildId).channelID);
-      }
-
       return;
     }
 
     this.current = this.queue.shift();
 
     const voiceConnection = this._client.voiceConnections.get(this._guildId);
-    //const playbackURL = await getFormats(this.current.id)
+    const playbackURL = await getFormats(this.current.id);
 
-    //this.current.duration = await getDuration(this.current.id);
-
-    //if (!playbackURL) {
-    //  await this._announce('Track Unplayable', 'This track is not playable, skipping...');
-    //  return this.play();
-    //}
-
-    //console.log(playbackURL);
+    if (!playbackURL) {
+      await this._announce('Track Unplayable', 'This track is not playable, skipping...');
+      return this.play();
+    }
 
     this._announce('Now Playing', this.current.title);
 
-    voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
+    //voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
+    voiceConnection.play(playbackURL, { format: 'webm' });
 
     voiceConnection.once('end', () => {
       if (2 === this.repeat) {
@@ -161,11 +152,6 @@ async function getFormats (id) {
   formats.sort((a, b) => b.itag - a.itag);
 
   return 0 < formats.length ? formats[0].url : null;
-}
-
-async function getDuration (id) {
-  const info = await ytdl.getInfo(id);
-  return info.length_seconds * 1000;
 }
 
 module.exports = AudioPlayer;

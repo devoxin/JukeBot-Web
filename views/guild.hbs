@@ -9,10 +9,19 @@
     <div class="title-block">
       <span>{{name}}</span>
     </div>
-    <div class="search-block">
-      <input onkeypress="checkEnter(event)" id="search-identifier" type="text" placeholder="Search for a song...">
-      <button onclick="search()">Search</button>
+    <div class="vc-block" style="background-color: {{channel.colour}}">
+      {{#if channel.connected}}
+        <span>Connected to: {{channel.name}}</span>
+      {{else}}
+        <span>Not connected to a voice channel</span>
+      {{/if}}
     </div>
+    {{#if channel.connected}}
+      <div class="search-block">
+        <input onkeypress="checkEnter(event)" id="search-identifier" type="text" placeholder="Search for a song...">
+        <button onclick="search()">Search</button>
+      </div>
+    {{/if}}
     <div class="results" id="results-list"></div>
     <div class="track-list">
       <span>Track List ({{queue.length}} tracks)</span>
