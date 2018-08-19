@@ -4,7 +4,7 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   <script src="/main.js"></script>
 </head>
-<body>
+<body onload="handleProgressUpdate({{current.progressMs}}, {{current.durationMs}})">
   <div class="container">
     <div class="title-block">
       <span>{{name}}</span>

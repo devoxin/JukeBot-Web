@@ -1,34 +1,14 @@
-function request (method, route, headers = {}, body) {
-  return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-    req.open(method, route, true);
+function handleProgressUpdate (currentMs, totalMs) {
+  const interval = setInterval(() => {
+    currentMs += 100;
+    const pc = currentMs / totalMs * 100;
 
-    for (const key of Object.keys(headers)) {
-      req.setRequestHeader(key, headers[key]);
+    if (100 <= pc) {
+      clearInterval(interval);
+    } else {
+      document.querySelector('div.progress-bar').style.width = `${pc}%`;
     }
-
-    req.onload = () => {
-      if (req.readyState === XMLHttpRequest.DONE) {
-        if (200 <= req.status && 400 > req.status) {
-          if (/application\/json/.test(req.getResponseHeader('Content-Type'))) {
-            resolve(JSON.parse(req.responseText));
-          } else {
-            resolve(req.responseText);
-          }
-        } else {
-          reject(req.responseText);
-        }
-      }
-    };
-
-    req.onerror = reject;
-
-    if ('object' === typeof body) {
-      body = JSON.stringify(body);
-    }
-
-    req.send(body);
-  });
+  }, 100);
 }
 
 async function search () {
@@ -67,4 +47,37 @@ function addToQueue (track) {
     },
     track
   );
+}
+
+function request (method, route, headers = {}, body) {
+  return new Promise((resolve, reject) => {
+    const req = new XMLHttpRequest();
+    req.open(method, route, true);
+
+    for (const key of Object.keys(headers)) {
+      req.setRequestHeader(key, headers[key]);
+    }
+
+    req.onload = () => {
+      if (req.readyState === XMLHttpRequest.DONE) {
+        if (200 <= req.status && 400 > req.status) {
+          if (/application\/json/.test(req.getResponseHeader('Content-Type'))) {
+            resolve(JSON.parse(req.responseText));
+          } else {
+            resolve(req.responseText);
+          }
+        } else {
+          reject(req.responseText);
+        }
+      }
+    };
+
+    req.onerror = reject;
+
+    if ('object' === typeof body) {
+      body = JSON.stringify(body);
+    }
+
+    req.send(body);
+  });
 }
