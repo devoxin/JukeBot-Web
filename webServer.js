@@ -41,6 +41,10 @@ class WebServer {
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
 
+    server.get('/gateway', (req, res) => {
+      res.json({ port: config.wsPort });
+    });
+
     server.get('/guild/:id', (req, res) => {
       const guildId = req.params.id;
 

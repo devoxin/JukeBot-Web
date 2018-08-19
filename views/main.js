@@ -9,12 +9,14 @@ function load (playing, currentMs, totalMs) {
     handleProgressUpdate(currentMs, totalMs);
   }
 
-  ws = new WebSocket(`ws://${location.host.split(':')[0]}:8080`);
-  ws.onopen = () => {
-    console.log('WS opened! Sending...');
-    ws.send(`guild:${guildId}`);
-  };
-  ws.onmessage = processWsMessage;
+  request('GET', '/gateway').then((res) => {
+    ws = new WebSocket(`ws://${location.host.split(':')[0]}:${res.port}`);
+    ws.onopen = () => {
+      console.log('WS opened! Sending...');
+      ws.send(`guild:${guildId}`);
+    };
+    ws.onmessage = processWsMessage;
+  });
 }
 
 function processWsMessage (msg) {
