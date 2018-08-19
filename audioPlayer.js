@@ -72,11 +72,9 @@ class AudioPlayer {
     const playbackURL = await getFormats(this.current.id);
 
     if (!playbackURL) {
-      await this._announce('Track Unplayable', 'This track is not playable, skipping...');
+      await this._announce('Track Unplayable', `${this.current.title} is unplayable.`);
       return this.play();
     }
-
-    this._announce('Now Playing', this.current.title);
 
     //voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
     await voiceConnection.play(playbackURL, { format: 'webm' });
