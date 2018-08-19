@@ -4,7 +4,7 @@ const config = require('./config');
 const client = new Client();
 
 client.once('ready', () => {
-  console.log('gucci gang');
+  console.log('Connected!');
 });
 
 client.on('messageCreate', async (msg) => {
