@@ -7,10 +7,10 @@ function handleProgressUpdate (currentMs, totalMs) {
     const diff = Date.now() - start;
     const pc = (currentMs + diff) / totalMs * 100;
 
+    document.querySelector('div.progress-bar').style.width = `${pc}%`;
+
     if (100 <= pc) {
       clearInterval(interval);
-    } else {
-      document.querySelector('div.progress-bar').style.width = `${pc}%`;
     }
   }, 100);
 }
