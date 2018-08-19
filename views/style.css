@@ -125,8 +125,13 @@ body {
   background-color: white;
 }
 
+.progress-bar {
+  background-color: #1E90FF;
+  height: 5px;
+}
+
 .current-track img {
-  height: 90%;
+  height: 85%;
   object-fit: cover;
   margin-left: 5px;
   margin-top: 5px;
@@ -136,7 +141,7 @@ body {
 
 .current-track #title {
   display: block;
-  font-size: 30px;
+  font-size: 25px;
   white-space: nowrap; 
   text-overflow: ellipsis;
   overflow: hidden;

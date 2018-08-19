@@ -31,12 +31,18 @@ webServer.get('/guild/:id', (req, res) => {
 
   const player = getPlayer(guildId);
   const isConnected = client.voiceConnections.has(guildId);
-  const channel = isConnected ? client.getChannel(client.voiceConnections.get(guildId).channelID) : null;
+  const voiceConnection = isConnected ? client.voiceConnections.get(guildId) : null;
+  const isPlaying = isConnected && voiceConnection.playing;
+
+  const channel = isConnected ? client.getChannel(voiceConnection.channelID) : null;
+  const progressMs = isPlaying ? voiceConnection.current.playTime : 0;
+  const progressPc = isPlaying ? progressMs / player.current.durationMs * 100 : 0;
+  const current = Object.assign({ progressMs, progressPc }, player.current);
 
   res.render('guild', {
     name: client.guilds.get(guildId).name,
     queue: player.queue,
-    current: player.current,
+    current,
     channel: {
       connected: isConnected,
       name: channel ? channel.name : null,
