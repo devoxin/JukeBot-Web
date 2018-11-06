@@ -69,16 +69,21 @@ class AudioPlayer {
     this._client.ws.dispatchPayload(this._guildId, 'QUEUE_REMOVE', null);
 
     const voiceConnection = this._client.voiceConnections.get(this._guildId);
-    const playbackURL = await getFormats(this.current.id);
+    //const playbackURL = await getFormats(this.current.id);
 
-    if (!playbackURL) {
-      await this._announce('Track Unplayable', `${this.current.title} is unplayable.`);
-      return this.play();
-    }
+    //if (!playbackURL) {
+    //  await this._announce('Track Unplayable', `${this.current.title} is unplayable.`);
+    //  return this.play();
+    //}
 
-    //voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
-    await voiceConnection.play(playbackURL, { format: 'webm' });
+    voiceConnection.play(ytdl(this.current.id, { filter: 'audioonly' }));
+
+    await this.waitForStart();
+
+    console.log('Started playing.');
     this._client.ws.dispatchPayload(this._guildId, 'TRACK_CHANGE', this.current);
+
+    //voiceConnection.play(playbackURL, { format: 'webm' });
 
     voiceConnection.once('end', () => {
       if (2 === this.repeat) {
@@ -120,6 +125,22 @@ class AudioPlayer {
 
   isPlaying () {
     return this.isConnected() && null !== this.current;
+  }
+
+  waitForStart () {
+    return new Promise((resolve) => {
+      const voiceConnection = this._client.voiceConnections.get(this._guildId);
+
+      const interval = setInterval(() => {
+        if (!voiceConnection) {
+          resolve();
+          clearInterval(interval);
+        } else if (voiceConnection.current.buffer) {
+          resolve();
+          clearInterval(interval);
+        }
+      }, 10);
+    });
   }
 
   async _announce (title, description) {
